@@ -16,7 +16,7 @@ import { OriginHelper } from '../modules/scene/OriginHelper'
 import { AudioManager } from '../modules/audio/AudioManager'
 import { PostProcessing } from '../modules/postprocessing/PostProcessing'
 import { DEFAULT_SHADOW_CATCHER_COLOR, DEFAULT_SHADOW_CATCHER_OPACITY, shadowCatcherColor, shadowCatcherOpacity } from '../modules/scene/shadows'
-import { getSplatUrl } from '../utils/worldLoader'
+import { getSplatUrl, loadableAssetUrl } from '../utils/worldLoader'
 import { useDebugStore } from '../store/debug'
 import { WorldRenderMode, ObjectRenderMode, ViewerQuality, type Vec3Tuple, type World, type WorldHoverPreview, type WorldObjectAsset, type WorldSceneProject } from '../types/world'
 import { AppButton } from './AppButton'
@@ -152,12 +152,8 @@ export function WorldViewer({
   const sunIntensity = useDebugStore((s) => s.sunIntensity)
   const sunColor = useDebugStore((s) => s.sunColor)
   const [sourceThumbnailCollapsed, setSourceThumbnailCollapsed] = useState(false)
-  const colliderUrl = desiredWorld?.assets.mesh.collider_mesh_url.startsWith('/worlds/')
-    ? desiredWorld.assets.mesh.collider_mesh_url
-    : ''
-  const panoUrl = desiredWorld?.assets.imagery.pano_url.startsWith('/worlds/')
-    ? desiredWorld.assets.imagery.pano_url
-    : ''
+  const colliderUrl = loadableAssetUrl(desiredWorld?.assets.mesh.collider_mesh_url)
+  const panoUrl = loadableAssetUrl(desiredWorld?.assets.imagery.pano_url)
 
   useEffect(() => {
     charRef.current?.reset()
@@ -341,14 +337,14 @@ function SourceImageControls({
   onRefreshWorlds?: () => void
   onThumbnailCollapseToggle: () => void
 }) {
-  if (!activeSourceImageUrl && !import.meta.env.DEV) return null
+  if (!activeSourceImageUrl && !onRefreshWorlds) return null
 
   return (
     <div className={`pointer-events-none fixed bottom-2 right-2 z-30 hidden md:block ${chrome.enter}`}>
       {activeSourceImageUrl ? (
         thumbnailCollapsed ? (
           <div className="flex items-center gap-1">
-            {import.meta.env.DEV && onRefreshWorlds && (
+            {onRefreshWorlds && (
               <RefreshWorldsButton
                 refreshing={refreshingWorlds}
                 onRefresh={onRefreshWorlds}
@@ -370,7 +366,7 @@ function SourceImageControls({
               draggable={false}
             />
             <div className="absolute bottom-0.5 right-0.5 flex items-center gap-1">
-              {import.meta.env.DEV && onRefreshWorlds && (
+              {onRefreshWorlds && (
                 <RefreshWorldsButton
                   refreshing={refreshingWorlds}
                   onRefresh={onRefreshWorlds}
@@ -386,7 +382,7 @@ function SourceImageControls({
           </div>
         )
       ) : (
-        import.meta.env.DEV && onRefreshWorlds && (
+        onRefreshWorlds && (
           <RefreshWorldsButton
             refreshing={refreshingWorlds}
             onRefresh={onRefreshWorlds}

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { Tooltip } from '@radix-ui/themes'
 import { ArrowCounterClockwise, ButterflyIcon, CheckSquareIcon, FileTextIcon, FolderOpenIcon, GlobeHemisphereWestIcon, ImageSquareIcon, ListIcon, PencilSimpleIcon, PersonIcon, QuestionMarkIcon, SpeakerHigh, SpeakerSlash, SquareIcon, TerminalWindowIcon } from '@phosphor-icons/react'
 import { useLocation } from 'wouter'
@@ -37,6 +37,7 @@ interface Props {
   onObjectHover?: (asset: WorldObjectAsset, hovering: boolean, instanceId?: string) => void
   onWorldHover?: (preview: WorldHoverPreview, hovering: boolean) => void
   onActiveWorldVersionChange: (index: number) => void
+  remotePanel?: ReactNode
 }
 
 export function WorldSidebar({
@@ -52,6 +53,7 @@ export function WorldSidebar({
   onObjectHover,
   onWorldHover,
   onActiveWorldVersionChange,
+  remotePanel,
 }: Props) {
   const [, navigate] = useLocation()
   const [menuOpen, setMenuOpen] = useState(false)
@@ -135,6 +137,8 @@ export function WorldSidebar({
       </div>
 
       <SidebarViewerControls />
+
+      {!compact && remotePanel}
 
       {!compact && <div
         className={`
