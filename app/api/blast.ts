@@ -1,5 +1,5 @@
-import { handleBlast } from './lib/handlers'
-import { nodeHandler } from './lib/nodeHandler'
+import { handleBlast } from './_lib/handlers.js'
+import { nodeHandler } from './_lib/nodeHandler.js'
 
 export const maxDuration = 30
 

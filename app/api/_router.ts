@@ -1,4 +1,4 @@
-import { handleBlast, handleGenerate, handleWorlds } from './lib/handlers'
+import { handleBlast, handleGenerate, handleWorlds } from './_lib/handlers.js'
 
 export async function handleApiRequest(request: Request): Promise<Response> {
   const { pathname } = new URL(request.url)

@@ -1,5 +1,5 @@
 import { BlobNotFoundError, get, list, put } from '@vercel/blob'
-import type { RemoteStore } from './generateService'
+import type { RemoteStore } from './generateService.js'
 
 const JSON_CACHE_SECONDS = 60
 const ASSET_CACHE_SECONDS = 60 * 60 * 24 * 30

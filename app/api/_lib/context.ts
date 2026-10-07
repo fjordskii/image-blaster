@@ -1,6 +1,6 @@
-import { createBlobStore } from '../../src/server/blobStore'
-import type { GenerateDeps } from '../../src/server/generateService'
-import { downloadAsset, pollOperation, submitWorld } from '../../src/server/worldLabsClient'
+import { createBlobStore } from '../../src/server/blobStore.js'
+import type { GenerateDeps } from '../../src/server/generateService.js'
+import { downloadAsset, pollOperation, submitWorld } from '../../src/server/worldLabsClient.js'
 
 export function createDeps(): GenerateDeps {
   return {

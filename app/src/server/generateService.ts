@@ -1,4 +1,4 @@
-import { HttpError } from './httpError'
+import { HttpError } from './httpError.js'
 import {
   MAX_CONCURRENT_JOBS,
   MAX_STARTS_PER_HOUR,
@@ -22,7 +22,7 @@ import {
   toClientJob,
   withSlugSuffix,
   assertSafeHttpsUrl,
-} from './remoteWorld'
+} from './remoteWorld.js'
 
 const HOUR_MS = 60 * 60 * 1000
 

@@ -1,6 +1,6 @@
-import { errorResult } from '../../src/server/generateService'
-import { HttpError } from '../../src/server/httpError'
-import { json } from './http'
+import { errorResult } from '../../src/server/generateService.js'
+import { HttpError } from '../../src/server/httpError.js'
+import { json } from './http.js'
 
 const BODY_LIMIT = 4_500_000
 

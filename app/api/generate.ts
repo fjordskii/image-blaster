@@ -1,5 +1,5 @@
-import { handleGenerate } from './lib/handlers'
-import { nodeHandler } from './lib/nodeHandler'
+import { handleGenerate } from './_lib/handlers.js'
+import { nodeHandler } from './_lib/nodeHandler.js'
 
 export const maxDuration = 60
 

@@ -1,4 +1,4 @@
-import { MARBLE_ENDPOINT, MAX_ASSET_BYTES, assertSafeHttpsUrl } from './remoteWorld'
+import { MARBLE_ENDPOINT, MAX_ASSET_BYTES, assertSafeHttpsUrl } from './remoteWorld.js'
 
 export async function submitWorld(request: unknown, apiKey: string): Promise<unknown> {
   const response = await fetch(`${MARBLE_ENDPOINT}/worlds:generate`, {

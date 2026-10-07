@@ -1,7 +1,7 @@
-import { advanceWorldJob, errorResult, listRemoteWorlds, startWorldJob } from '../../src/server/generateService'
-import { authorize } from '../../src/server/remoteWorld'
-import { createDeps } from './context'
-import { json, readJson } from './http'
+import { advanceWorldJob, errorResult, listRemoteWorlds, startWorldJob } from '../../src/server/generateService.js'
+import { authorize } from '../../src/server/remoteWorld.js'
+import { createDeps } from './context.js'
+import { json, readJson } from './http.js'
 
 const BLAST_TODO = [
   'FAL_KEY is optional. Marble world generation does not call FAL.',

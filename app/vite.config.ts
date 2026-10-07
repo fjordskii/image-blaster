@@ -877,8 +877,8 @@ function remoteApiPlugin(): Plugin {
         }
         void (async () => {
           try {
-            const { handleApiRequest } = await import('./api/router')
-            const { nodeRequestToWeb, writeWebResponse } = await import('./api/lib/nodeHandler')
+            const { handleApiRequest } = await import('./api/_router')
+            const { nodeRequestToWeb, writeWebResponse } = await import('./api/_lib/nodeHandler')
             const request = await nodeRequestToWeb(req, `http://${req.headers.host || 'localhost'}`)
             const response = await handleApiRequest(request)
             await writeWebResponse(res, response)

@@ -1,5 +1,5 @@
-import type { World, WorldEntry } from '../types/world'
-import { HttpError } from './httpError'
+import type { World, WorldEntry } from '../types/world.js'
+import { HttpError } from './httpError.js'
 
 export const MARBLE_ENDPOINT = 'https://api.worldlabs.ai/marble/v1'
 export const MARBLE_MODEL = 'marble-1.1'

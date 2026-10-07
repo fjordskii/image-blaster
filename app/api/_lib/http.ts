@@ -1,4 +1,4 @@
-import { HttpError } from '../../src/server/httpError'
+import { HttpError } from '../../src/server/httpError.js'
 
 export function json(status: number, body: unknown): Response {
   return new Response(JSON.stringify(body), {
