@@ -5,7 +5,8 @@ import { WorldSidebar } from './components/WorldSidebar'
 import { BottomLeftControls, ViewerModeHotkeys } from './components/BottomLeftControls'
 import { TouchControls } from './components/TouchControls'
 import { useSceneProject } from './modules/scene/useSceneProject'
-import { fetchWorlds, loadWorlds } from './utils/worldLoader'
+import { RemoteGenerate } from './components/RemoteGenerate'
+import { fetchWorlds, loadWorlds, mergeWorldEntries } from './utils/worldLoader'
 import { useDebugStore } from './store/debug'
 import { isEditableTarget } from './utils/dom'
 import type { WorldEntry, WorldHoverPreview, WorldObjectAsset } from './types/world'
@@ -21,18 +22,23 @@ const DebugPanel = import.meta.env.DEV
 export function App() {
   const [worlds, setWorlds] = useState(loadWorlds)
   const [refreshingWorlds, setRefreshingWorlds] = useState(false)
+  const [remoteReady, setRemoteReady] = useState(false)
   const refreshTimeoutRef = useRef<number | undefined>(undefined)
 
   const refreshWorlds = useCallback(async () => {
-    if (!import.meta.env.DEV) return
     setRefreshingWorlds(true)
     try {
       setWorlds(await fetchWorlds())
     } catch (error) {
-      console.warn('Could not refresh local world assets.', error)
+      console.warn('Could not refresh worlds.', error)
     } finally {
       setRefreshingWorlds(false)
+      setRemoteReady(true)
     }
+  }, [])
+
+  const handleWorldReady = useCallback((entry: WorldEntry) => {
+    setWorlds((current) => mergeWorldEntries(current, [entry]))
   }, [])
 
   useEffect(() => {
@@ -56,10 +62,18 @@ export function App() {
     }
   }, [refreshWorlds])
 
+  if (!remoteReady) {
+    return <div className="h-screen w-screen bg-black" />
+  }
+
   if (!worlds.length) {
     return (
-      <div className="flex items-center justify-center h-screen text-white bg-black">
-        No worlds found in worlds/
+      <div className="flex min-h-screen justify-center overflow-y-auto bg-black px-4 py-8 text-white">
+        <RemoteGenerate
+          variant="page"
+          onWorldReady={handleWorldReady}
+          onWorldsChanged={refreshWorlds}
+        />
       </div>
     )
   }
@@ -69,6 +83,7 @@ export function App() {
       worlds={worlds}
       refreshingWorlds={refreshingWorlds}
       onRefreshWorlds={refreshWorlds}
+      onWorldReady={handleWorldReady}
     />
   )
 }
@@ -77,10 +92,12 @@ function LoadedApp({
   worlds,
   refreshingWorlds,
   onRefreshWorlds,
+  onWorldReady,
 }: {
   worlds: WorldEntry[]
   refreshingWorlds: boolean
   onRefreshWorlds: () => void
+  onWorldReady: (entry: WorldEntry) => void
 }) {
   const [editMatch, editParams] = useRoute('/:slug/edit')
   const [match, params] = useRoute('/:slug')
@@ -212,6 +229,13 @@ function LoadedApp({
               ...versions,
               [entry.slug]: index,
             }))}
+            remotePanel={editing ? undefined : (
+              <RemoteGenerate
+                variant="sidebar"
+                onWorldReady={onWorldReady}
+                onWorldsChanged={onRefreshWorlds}
+              />
+            )}
           />
         </div>
       )}

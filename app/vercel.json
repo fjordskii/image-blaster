@@ -1,3 +1,13 @@
 {
-  "rewrites": [{ "source": "/((?!assets/|worlds/|butterfly/|.*\\.[a-zA-Z0-9]+$).*)", "destination": "/index.html" }]
+  "functions": {
+    "api/**/*.ts": {
+      "maxDuration": 60
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/((?!api(?:/|$)|assets/|worlds/|butterfly/|.*\\.[a-zA-Z0-9]+$).*)",
+      "destination": "/index.html"
+    }
+  ]
 }

@@ -42,7 +42,7 @@ const exampleEntry: WorldEntry = {
 
 vi.mock('virtual:worlds', () => ({ default: [exampleEntry] }))
 
-const { loadWorlds, fetchWorlds, getSplatUrl } = await import('./worldLoader')
+const { loadWorlds, fetchWorlds, getSplatUrl, mergeWorldEntries } = await import('./worldLoader')
 
 describe('worldLoader', () => {
   it('returns WorldEntry array with correct slug', () => {
@@ -50,6 +50,11 @@ describe('worldLoader', () => {
     expect(worlds).toHaveLength(1)
     expect(worlds[0].slug).toBe('example')
     expect(worlds[0].project.display_name).toBe('Example World')
+  })
+
+  it('appends remote worlds without replacing a local slug', () => {
+    const remote = { ...exampleEntry, slug: 'harbor', project: { slug: 'harbor', display_name: 'Harbor' } }
+    expect(mergeWorldEntries([exampleEntry], [remote, exampleEntry]).map((entry) => entry.slug)).toEqual(['example', 'harbor'])
   })
 
   it('fetches fresh world metadata in dev', async () => {
@@ -102,7 +107,7 @@ describe('worldLoader', () => {
     expect(getSplatUrl(world)).toBe('')
   })
 
-  it('getSplatUrl refuses provider URLs', () => {
+  it('getSplatUrl loads durable https splat urls', () => {
     const world = {
       ...exampleWorld,
       assets: {
@@ -110,6 +115,20 @@ describe('worldLoader', () => {
         splats: {
           ...exampleWorld.assets.splats,
           spz_urls: { full_res: 'https://cdn.example.com/splat_full.spz' },
+        },
+      },
+    }
+    expect(getSplatUrl(world)).toBe('https://cdn.example.com/splat_full.spz')
+  })
+
+  it('getSplatUrl rejects insecure splat urls', () => {
+    const world = {
+      ...exampleWorld,
+      assets: {
+        ...exampleWorld.assets,
+        splats: {
+          ...exampleWorld.assets.splats,
+          spz_urls: { full_res: 'http://cdn.example.com/splat_full.spz' },
         },
       },
     }

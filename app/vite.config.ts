@@ -862,7 +862,39 @@ function worldsPlugin(): Plugin {
   }
 }
 
+function remoteApiPlugin(): Plugin {
+  return {
+    name: 'remote-api',
+    async configureServer(server) {
+      const dotenv = await import('dotenv')
+      dotenv.config({ path: path.resolve(__dirname, '../.env') })
+      dotenv.config({ path: path.resolve(__dirname, '.env') })
+      server.middlewares.use((req, res, next) => {
+        const url = req.url || ''
+        if (!url.startsWith('/api/')) {
+          next()
+          return
+        }
+        void (async () => {
+          try {
+            const { handleApiRequest } = await import('./api/router')
+            const { nodeRequestToWeb, writeWebResponse } = await import('./api/lib/nodeHandler')
+            const request = await nodeRequestToWeb(req, `http://${req.headers.host || 'localhost'}`)
+            const response = await handleApiRequest(request)
+            await writeWebResponse(res, response)
+          } catch (error) {
+            const message = error instanceof Error ? error.message : 'Internal error'
+            res.statusCode = 500
+            res.setHeader('content-type', 'application/json; charset=utf-8')
+            res.end(JSON.stringify({ error: message }))
+          }
+        })()
+      })
+    },
+  }
+}
+
 export default defineConfig({
-  plugins: [react(), worldsPlugin()],
+  plugins: [react(), worldsPlugin(), remoteApiPlugin()],
   server: { fs: { allow: ['..'] } },
 })

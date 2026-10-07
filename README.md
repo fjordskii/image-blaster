@@ -58,3 +58,9 @@ IMAGE-BLASTER uses a few generation models:
 ### Development
 
 - remove `/app` from the `.claudeignore` file to give Claude the ability to change the React viewer.
+
+### Hosted viewer
+
+The Vite app can generate a Marble world from the deployed site, without Claude Code. Setup, the gate secret, and the env vars are in [`app/README-remote.md`](app/README-remote.md).
+
+World generation needs `WORLD_LABS_API_KEY`, `BLOB_READ_WRITE_TOKEN`, and `BLAST_GATE_SECRET` on the Vercel project. `FAL_KEY` is optional and unused by that path.
