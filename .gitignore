@@ -17,3 +17,5 @@ app/.vite/
 
 # OS
 .DS_Store
+.vercel
+.env*
